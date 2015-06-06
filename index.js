@@ -1,13 +1,24 @@
-var express = require('express')
+var express = require('express');
+var morgan = require('morgan'); 
+
+var methodOverride = require('method-override');
+var fs = require('fs');
+var htmlfile = "index.html";
+
 var app = express();
 
-app.set('port', (process.env.PORT || 5000))
-app.use(express.static(__dirname + '/public'))
+app.use(morgan('dev'));
+
+app.use(methodOverride());
 
 app.get('/', function(request, response) {
-  response.send('Hello World! Here I am!')
-})
+  var html = fs.readFileSync(htmlfile).toString();
+  response.send(html);  
+});
 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
-})
+
+var port = process.env.PORT || 8080;
+app.listen(port, function() {
+  console.log("Listening on" + port);
+});
+
